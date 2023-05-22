@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Other theme attributes -->
+
+        <!-- Add this attribute to handle display cutout (notch) behavior -->
+        <item name="android:windowLayoutInDisplayCutoutMode">never</item>
+    </style>
+</resources>

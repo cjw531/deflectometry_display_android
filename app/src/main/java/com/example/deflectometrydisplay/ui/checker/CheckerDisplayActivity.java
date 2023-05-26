@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -71,5 +72,12 @@ public class CheckerDisplayActivity extends Activity  {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    // Override onTouchEvent to intercept touch events outside of the root view
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        finish(); // Close the activity when touched outside the root view
+        return super.onTouchEvent(event);
     }
 }

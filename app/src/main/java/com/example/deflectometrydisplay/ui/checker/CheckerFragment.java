@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.deflectometrydisplay.databinding.FragmentCheckerBinding;
-import com.example.deflectometrydisplay.ui.sinusoid.FringeActivity;
-import com.example.deflectometrydisplay.ui.sinusoid.SinusoidPattern;
 
 import java.io.ByteArrayOutputStream;
 
@@ -51,7 +47,7 @@ public class CheckerFragment extends Fragment {
                 Bitmap pattern = checkerPattern.getPatterns();
 
                 // Start the FullscreenActivity and pass the pattern as an extra
-                Intent intent = new Intent(getActivity(), FringeActivity.class);
+                Intent intent = new Intent(getActivity(), CheckerDisplayActivity.class);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 pattern.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] patternBytes = stream.toByteArray();

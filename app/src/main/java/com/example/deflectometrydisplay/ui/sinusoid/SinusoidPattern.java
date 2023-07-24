@@ -3,8 +3,13 @@ package com.example.deflectometrydisplay.ui.sinusoid;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class SinusoidPattern {
     private int[] resolution;
@@ -37,30 +42,75 @@ public class SinusoidPattern {
 
     private Bitmap[] createSinusXY() {
         Bitmap[] patterns = new Bitmap[nph * 2];
-        int patternSize = Math.min(resolution[0], resolution[1]);
+
+        double[] sinX = new double[resolution[0]];
+        double[] sinY = new double[resolution[1]];
+
+        double period_x = frequency * 2;
+        double period_y = (resolution[1] * frequency * 2) / resolution[0];
 
         for (int i = 0; i < nph; i++) {
             int k = i - 1;
-            double period = frequency * 2 * Math.PI;
 
             // Create sinusoidal pattern in X direction
-            double[] sinX = new double[patternSize];
-            for (int j = 0; j < patternSize; j++) {
-                double value = 0.5 + 0.5 * Math.sin(j * period / patternSize + k * Math.PI);
-                sinX[j] = value;
+            for (int j = 0; j < resolution[0]; j++) {
+                double x = j * (period_x * Math.PI) / (resolution[0] - 1);
+                sinX[j] = 0.5 + 0.5 * Math.sin(x + 0.5 * k * Math.PI);
             }
-            Bitmap imgX = createPatternImage(sinX, resolution[1], patternSize);
-            patterns[i] = imgX;
+
+            int[][] bitmapArray = new int[resolution[1]][resolution[0]];
+            for (int j = 0; j < resolution[1]; j++) {
+                for (int l = 0; l < resolution[0]; l++) {
+                    int value = (int) (sinX[l] * 255);
+                    int pixelValue = value << 16 | value << 8 | value | 0xFF000000;
+                    bitmapArray[j][l] = pixelValue;
+                }
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(resolution[0], resolution[1], Bitmap.Config.ARGB_8888);
+            int[] pixels = new int[resolution[0] * resolution[1]];
+            for (int j = 0; j < resolution[1]; j++) {
+                System.arraycopy(bitmapArray[j], 0, pixels, j * resolution[0], resolution[0]);
+            }
+            bitmap.setPixels(pixels, 0, resolution[0], 0, 0, resolution[0], resolution[1]);
+
+            // Rotate the bitmap
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            patterns[i] = rotatedBitmap;
 
             // Create sinusoidal pattern in Y direction
-            double[] sinY = new double[patternSize];
-            period = (patternSize * frequency * 2 * Math.PI) / patternSize;
-            for (int j = 0; j < patternSize; j++) {
-                double value = 0.5 + 0.5 * Math.sin(j * period / patternSize + k * Math.PI);
-                sinY[j] = value;
+            for (int j = 0; j < resolution[1]; j++) {
+                double y = j * (period_y * Math.PI) / (resolution[1] - 1);
+                sinY[j] = 0.5 + 0.5 * Math.sin(y + 0.5 * k * Math.PI);
             }
-            Bitmap imgY = createPatternImage(sinY, resolution[0], patternSize);
-            patterns[nph + i] = imgY;
+
+            bitmapArray = new int[resolution[1]][resolution[0]];
+            for (int j = 0; j < resolution[1]; j++) {
+                for (int l = 0; l < resolution[0]; l++) {
+                    int value = (int) (sinY[j] * 255);
+                    int pixelValue = value << 16 | value << 8 | value | 0xFF000000;
+                    bitmapArray[j][l] = pixelValue;
+                }
+            }
+
+            bitmap = Bitmap.createBitmap(resolution[0], resolution[1], Bitmap.Config.ARGB_8888);
+            pixels = new int[resolution[0] * resolution[1]];
+            for (int j = 0; j < resolution[1]; j++) {
+                for (int l = 0; l < resolution[0]; l++) {
+                    pixels[j * resolution[0] + l] = bitmapArray[j][l];
+                }
+            }
+            bitmap.setPixels(pixels, 0, resolution[0], 0, 0, resolution[0], resolution[1]);
+
+            // Rotate the bitmap
+            matrix = new Matrix();
+            matrix.postRotate(90);
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            patterns[nph + i] = rotatedBitmap;
         }
 
         return patterns;

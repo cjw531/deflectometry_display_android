@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="Phase Shift"
                 android:textSize="20sp"
-                android:paddingEnd="52dp" />
+                android:paddingEnd="102dp" />
 
             <EditText
                 android:id="@+id/input_nph"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Max. Frequency"
                 android:textSize="20sp"
-                android:paddingEnd="16dp" />
+                android:paddingEnd="62dp" />
 
             <EditText
                 android:id="@+id/input_max_frequency"
@@ -54,6 +54,27 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:text="16" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exposure Time (ms)"
+                android:textSize="20sp"
+                android:paddingEnd="25dp" />
+
+            <EditText
+                android:id="@+id/input_exposure_time"
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="3000" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

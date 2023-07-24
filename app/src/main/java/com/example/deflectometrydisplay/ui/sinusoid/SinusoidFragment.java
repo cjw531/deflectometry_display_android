@@ -33,6 +33,7 @@ public class SinusoidFragment extends Fragment {
 
         final EditText input_nph = binding.inputNph;
         final EditText input_max_freq = binding.inputMaxFrequency;
+        final EditText input_exposure_time = binding.inputExposureTime;
         final Button button_generate = binding.buttonGenerateFringe;
 
         // Set a click listener for the button
@@ -42,6 +43,8 @@ public class SinusoidFragment extends Fragment {
                 // Retrieve the input values
                 String phaseShift = input_nph.getText().toString();
                 String maxFrequency = input_max_freq.getText().toString();
+                String exposureTimeString = input_exposure_time.getText().toString(); // string first
+                Integer exposureTime = Integer.parseInt(exposureTimeString); // convert into double
 
                 // For example, display a toast message with the input values
                 String message = "Phase Shift: " + phaseShift + ", Max. Frequency: " + maxFrequency;
@@ -52,12 +55,19 @@ public class SinusoidFragment extends Fragment {
                 SinusoidPattern sinPattern = new SinusoidPattern(requireContext(), nph, max_freq);
                 Bitmap[] patterns = sinPattern.getPatterns();
 
-                // Start the FullscreenActivity and pass the pattern as an extra
+                // Start the FullscreenActivity and pass the patterns as an extra
                 Intent intent = new Intent(getActivity(), FringeActivity.class);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                patterns[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] patternBytes = stream.toByteArray();
-                intent.putExtra("pattern", patternBytes);
+                ByteArrayOutputStream[] streamArray = new ByteArrayOutputStream[patterns.length];
+                byte[][] patternBytesArray = new byte[patterns.length][];
+
+                for (int i = 0; i < patterns.length; i++) {
+                    streamArray[i] = new ByteArrayOutputStream();
+                    patterns[i].compress(Bitmap.CompressFormat.PNG, 100, streamArray[i]);
+                    patternBytesArray[i] = streamArray[i].toByteArray();
+                }
+
+                intent.putExtra("patterns", patternBytesArray); // pass fringe pattern array
+                intent.putExtra("time", exposureTime); // pass exposure time
                 startActivity(intent);
             }
         });

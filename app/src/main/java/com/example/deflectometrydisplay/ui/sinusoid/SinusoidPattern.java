@@ -1,39 +1,42 @@
 package com.example.deflectometrydisplay.ui.sinusoid;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public class SinusoidPattern {
+    private Context context;
     private int[] resolution;
     private int nph;
     private int frequency;
     private Bitmap[] patterns;
 
-    public SinusoidPattern(Context context, int nph, int frequency) {
+    public SinusoidPattern(Context context, int nph, int frequency, int width, int height) {
         // Get screen resolution
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        }
-        int screenWidth = displayMetrics.widthPixels;
-        int screenHeight = displayMetrics.heightPixels;
-        int resolution_0 = Math.min(screenWidth, screenHeight);
-        int resolution_1 = Math.max(screenWidth, screenHeight);
+        int resolution_0 = Math.min(width, height);
+        int resolution_1 = Math.max(width, height);
         int[] resolution = {resolution_0, resolution_1};
         this.resolution = resolution;
 
+        this.context = context;
         this.nph = nph;
         this.frequency = frequency;
         this.patterns = createSinusXY();
+        saveBmpImagesInPictures();
     }
 
     public Bitmap[] getPatterns() {
@@ -116,15 +119,33 @@ public class SinusoidPattern {
         return patterns;
     }
 
-    private Bitmap createPatternImage(double[] values, int height, int width) {
-        Bitmap pattern = Bitmap.createBitmap(height, width, Bitmap.Config.ARGB_8888);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int color = (int) (values[j] * 255);
-                pattern.setPixel(i, width - 1 - j, Color.rgb(color, color, color));
+    // Function to save BMP image files in Pictures/Deflectometry using custom BMP format
+    private void saveBmpImagesInPictures() {
+        // Create the Pictures/Deflectometry directory if it doesn't exist
+        File picturesDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Deflectometry/Frequency_" + String.valueOf(frequency));
+        picturesDir.mkdirs();
+
+        // Save the BMP images to Pictures/Deflectometry using PNG format
+        for (int i = 0; i < patterns.length; i++) {
+            Bitmap bitmap = patterns[i];
+            File pngFile = new File(picturesDir, "pattern_" + String.valueOf(i) + ".png");
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pngFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            // Add the image to the MediaStore to make it visible in the Gallery app
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, pngFile.getName());
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, pngFile.getName());
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            values.put(MediaStore.Images.Media.DATA, pngFile.getAbsolutePath());
+            context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
-        return pattern;
     }
 
 }

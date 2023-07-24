@@ -91,7 +91,7 @@ public class FringeActivity extends Activity {
         imageFlipper.setInAnimation(inAnimation);
 
         // Set the flipper properties and start
-        imageFlipper.setFlipInterval(exposureTime); // 3s intervals
+        imageFlipper.setFlipInterval(exposureTime); // exposure time
         // Add an AnimationListener to stop flipping after initial display
         imageFlipper.getInAnimation().setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -109,7 +109,7 @@ public class FringeActivity extends Activity {
 
                 if (displayedChild == childCount - 1) {
                     imageFlipper.stopFlipping();
-                    // Pause for 3 seconds before finishing the activity
+                    // Pause for exposure time seconds before finishing the activity
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

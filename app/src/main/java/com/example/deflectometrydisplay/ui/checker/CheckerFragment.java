@@ -29,6 +29,10 @@ public class CheckerFragment extends Fragment {
         binding = FragmentCheckerBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Get the screen dimensions and update the LiveData
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+
         final EditText input_checker_pixel = binding.inputCheckerPixel;
         final EditText input_num_col = binding.inputNumCol;
         final EditText input_num_row = binding.inputNumRow;
@@ -43,7 +47,7 @@ public class CheckerFragment extends Fragment {
                 int num_col = Integer.parseInt(input_num_col.getText().toString());
                 int num_row = Integer.parseInt(input_num_row.getText().toString());
 
-                CheckerPattern checkerPattern = new CheckerPattern(requireContext(), checker_pixel, num_col, num_row);
+                CheckerPattern checkerPattern = new CheckerPattern(requireContext(), checker_pixel, num_col, num_row, screenWidth, screenHeight);
                 Bitmap pattern = checkerPattern.getPatterns();
 
                 // Start the FullscreenActivity and pass the pattern as an extra

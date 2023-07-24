@@ -1,40 +1,42 @@
 package com.example.deflectometrydisplay.ui.checker;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class CheckerPattern {
+    private Context context;
     private int[] resolution;
     private int checker_pixel;
     private int num_col;
     private int num_row;
     private Bitmap pattern;
 
-    public CheckerPattern(Context context, int checker_pixel, int num_col, int num_row) {
-        // Get screen resolution
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        }
-        int screenWidth = displayMetrics.widthPixels;
-        int screenHeight = displayMetrics.heightPixels;
+    public CheckerPattern(Context context, int checker_pixel, int num_col, int num_row, int screenWidth, int screenHeight) {
         int resolution_0 = Math.min(screenWidth, screenHeight);
         int resolution_1 = Math.max(screenWidth, screenHeight);
         int[] resolution = {resolution_0, resolution_1};
         this.resolution = resolution;
 
+        this.context = context;
         this.checker_pixel = checker_pixel;
         this.num_col = num_col;
         this.num_row = num_row;
 
         this.pattern = generateChessboard(resolution_0, resolution_1, this.checker_pixel, this.num_col, this.num_row);
+        saveBmpImagesInPictures();
     }
 
     public Bitmap getPatterns() {
@@ -94,6 +96,31 @@ public class CheckerPattern {
         return rotatedChessboard;
     }
 
+    // Function to save BMP image files in Pictures/Deflectometry using custom BMP format
+    private void saveBmpImagesInPictures() {
+        // Create the Pictures/Deflectometry directory if it doesn't exist
+        File picturesDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Deflectometry/Chessboard");
+        picturesDir.mkdirs();
 
+        // Save the BMP images to Pictures/Deflectometry using PNG format
+        File pngFile = new File(picturesDir, "chess_col_" + String.valueOf(num_col) + "_row_" + String.valueOf(num_row) + "_pix_" + String.valueOf(checker_pixel) + ".png");
+        Bitmap bitmap = pattern;
+
+        try {
+            FileOutputStream fos = new FileOutputStream(pngFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Add the image to the MediaStore to make it visible in the Gallery app
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, pngFile.getName());
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, pngFile.getName());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.DATA, pngFile.getAbsolutePath());
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
 
 }

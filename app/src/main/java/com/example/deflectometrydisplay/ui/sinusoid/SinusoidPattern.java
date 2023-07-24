@@ -1,22 +1,15 @@
 package com.example.deflectometrydisplay.ui.sinusoid;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 
 public class SinusoidPattern {
     private Context context;

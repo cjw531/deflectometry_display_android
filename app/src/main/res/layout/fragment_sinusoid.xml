@@ -20,61 +20,63 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phase Shift"
-                android:textSize="20sp"
-                android:paddingEnd="102dp" />
+                android:orientation="vertical"
+                android:paddingEnd="30dp">
 
-            <EditText
-                android:id="@+id/input_nph"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="4" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="Phase Shift"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="Max. Frequency"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="Exposure Time (μs)"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp" />
 
-            <TextView
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Max. Frequency"
-                android:textSize="20sp"
-                android:paddingEnd="62dp" />
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/input_max_frequency"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="16" />
+                <EditText
+                    android:id="@+id/input_nph"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:inputType="number"
+                    android:text="4" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                <EditText
+                    android:id="@+id/input_max_frequency"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:inputType="number"
+                    android:text="16" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/input_exposure_time"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:inputType="number"
+                    android:text="100000" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Exposure Time (ms)"
-                android:textSize="20sp"
-                android:paddingEnd="25dp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <EditText
-                android:id="@+id/input_exposure_time"
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="3000" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -53,7 +53,8 @@ public class FringeActivity extends Activity {
         // Retrieve the pattern byte array from the intent extras
         Intent intent = getIntent();
         byte[][] patternBytesArray = (byte[][]) intent.getSerializableExtra("patterns");
-        Integer exposureTime = (Integer) intent.getSerializableExtra("time");
+        // takes microseconds (μs) as input, param in milliseconds
+        Integer exposureTime = ((Integer) intent.getSerializableExtra("time")) / 1000;
 
         // Create an array of Bitmaps from the pattern byte arrays
         Bitmap[] patterns = new Bitmap[patternBytesArray.length];
